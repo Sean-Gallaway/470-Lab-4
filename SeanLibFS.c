@@ -147,13 +147,20 @@ int fileClose (const char* filename) {
     return -1;
 }
 
+/**
+* Remove a file from the file table and delete it from the system. the file must be closed first.
+*
+* param filename: the name of the file to delete.
+*/
 int fileDelete (const char* filename) {
+    // check files for filename
     for (int a = 0; a < MAX_FILES; a++) {
         if (strcmp(table[a].filename, filename) == 0) {
-            if (table[a].isOpen == 1) {
+            if (table[a].isOpen) {
                 printf("[ERROR]: %s is still open, close it first.\n", filename);
                 return -1;
             }
+            // delete from file table
             memset(&table[a], 0, sizeof(FileEntry));
             if (remove(filename) == 0) {
                 printf("%s removed.", filename);
